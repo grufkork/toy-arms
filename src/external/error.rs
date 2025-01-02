@@ -1,6 +1,6 @@
 use thiserror::Error;
 
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Clone, Copy, PartialEq)]
 pub enum TAExternalError {
     #[error("Snapshot was failed for some reason. To see the detail, destructure the inner error enum.")]
     SnapshotFailed(SnapshotFailedDetail),
@@ -14,7 +14,7 @@ pub enum TAExternalError {
     WriteMemoryFailed(ReadWriteMemoryFailedDetail),
 }
 
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Clone, Copy, PartialEq)]
 pub enum ReadWriteMemoryFailedDetail {
     #[error("Attempt to access invalid address")]
     ErrorInvalidAddress,
@@ -26,7 +26,7 @@ pub enum ReadWriteMemoryFailedDetail {
     UnknownError{ error_code: u32 },
 }
 
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Clone, Copy, PartialEq)]
 pub enum SnapshotFailedDetail {
     #[error("Invalid handle has been retrieved from CreateToolhelp32Snapshot")]
     InvalidHandle,
