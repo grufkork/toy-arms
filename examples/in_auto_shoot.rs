@@ -5,16 +5,16 @@ Then read the value called dwForceAttack and overwrite it to make player shoot.
 The offset DW_FORCE_ATTACK works as of the day i wrote this but it might not be up to date in your case.
 */
 
-use toy_arms::internal::cast;
-use toy_arms::utils::detect_keydown;
-use toy_arms::utils::keyboard::{detect_keypress, VirtualKeyCode};
-use internal::common::get_module_handle;
 use winapi::shared::minwindef::HMODULE;
+use toy_arms::{detect_keypress, detect_keydown, VirtualKeyCode};
+use toy_arms::cast;
+use toy_arms::internal::{get_module_function_address};
+use toy_arms::internal::utils::get_module_handle;
 
-internal::create_entrypoint!(hack_main_thread);
+toy_arms::create_entrypoint!(hack_main_thread);
 
 // This offset has to be up to date.
-const DW_FORCE_ATTACK: usize = 0x320BDE8;
+const DW_FORCE_ATTACK: usize = 0x31FE33C;
 
 fn hack_main_thread() {
     let mut once = false;
@@ -22,6 +22,12 @@ fn hack_main_thread() {
     // Gets module handle
     let module_handle: HMODULE = get_module_handle("client.dll").unwrap();
     println!("module handle = {:?}", module_handle as usize);
+
+    unsafe {
+        // Gets function address
+        let function_address = get_module_function_address("USER32.dll", "MessageBoxA").unwrap();
+        println!("function address = {:?}", function_address);
+    }
 
     let shoot_flag = cast!(mut module_handle as usize + DW_FORCE_ATTACK, u8);
 
